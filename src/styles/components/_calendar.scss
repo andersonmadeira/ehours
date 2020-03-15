@@ -1,0 +1,60 @@
+.calendar {
+  font-family: monospace;
+  width: 350px;
+}
+
+.calendar__year {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+.calendar__year h3 {
+  margin: 0;
+}
+
+.calendar__month {
+  text-align: center;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.calendar__month h4 {
+  margin: 0;
+}
+
+.calendar__month span {
+  cursor: pointer;
+}
+
+.calendar__days-of-week,
+.calendar__dates {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar__days-of-week {
+  padding: 10px 0px;
+}
+
+.calendar__days-of-week span {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.calendar__dates button:first-child {
+  grid-column: 1;
+}
+
+.calendar__dates button {
+  outline: none;
+  border: none;
+  background: transparent;
+  padding: 10px;
+}
+
+.calendar__dates button time {
+  font-size: 1rem;
+  text-align: center;
+}
