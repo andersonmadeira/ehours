@@ -10,14 +10,15 @@ import {
   isAfter,
   getDate,
   isToday,
+  isEqual,
 } from 'date-fns'
 import classNames from 'classnames'
 
-function getMonthDateElements(date) {
+function getMonthDateElements(date, onSelectDate) {
   const activeMonth = getMonth(date)
   const activeYear = getYear(date)
   const activeDay = getDate(date)
-  const startMonth = getDay(date)
+  const startMonth = getDay(new Date(activeYear, activeMonth, 1))
   const startStyle = { gridColumn: startMonth + 1 }
 
   return [...new Array(getDaysInMonth(date))].map((d, i) => {
@@ -25,28 +26,34 @@ function getMonthDateElements(date) {
       new Date(activeYear, activeMonth, i + 1),
       new Date(),
     )
+
     const isDateToday = isToday(new Date(activeYear, activeMonth, i + 1))
+    const isDateSelected = isEqual(
+      date,
+      new Date(activeYear, activeMonth, i + 1),
+    )
 
     const btnClasses = classNames({
       future: isFuture,
       today: isDateToday,
+      selected: isDateSelected,
     })
+    const dateString = `${activeYear}-${activeMonth + 1}-${i + 1}`
 
     return (
       <button
         key={i}
         className={btnClasses}
         style={i === 0 ? startStyle : null}
+        onClick={!isFuture ? () => onSelectDate(new Date(dateString)) : null}
       >
-        <time dateTime={`${activeYear}-${activeMonth + 1}-${i + 1}`}>
-          {i + 1}
-        </time>
+        <time dateTime={`${dateString}`}>{`${i + 1}`.padStart(2, '0')}</time>
       </button>
     )
   })
 }
 
-const Calendar = ({ date = new Date(), ...otherProps }) => {
+const Calendar = ({ date = new Date(), onPickDate, ...otherProps }) => {
   const [activeDate, setActiveDate] = useState(date)
 
   return (
@@ -73,7 +80,10 @@ const Calendar = ({ date = new Date(), ...otherProps }) => {
           <span>sat</span>
         </div>
         <div className="calendar__dates">
-          {getMonthDateElements(activeDate)}
+          {getMonthDateElements(activeDate, date => {
+            setActiveDate(date)
+            if (onPickDate) onPickDate(date)
+          })}
         </div>
       </div>
     </div>
