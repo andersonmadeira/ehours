@@ -6,7 +6,7 @@ const App = () => {
     <div className="app-container">
       <h1>ehours</h1>
       <Calendar style={{ marginRight: 20 }} />
-      <Calendar date={new Date(1989, 4)} style={{ marginBottom: 20 }} />
+      <Calendar date={new Date('2020-3-15')} style={{ marginBottom: 20 }} />
     </div>
   )
 }
