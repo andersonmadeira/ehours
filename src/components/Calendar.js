@@ -39,26 +39,25 @@ const Calendar = ({ date = new Date(), ...otherProps }) => {
   return (
     <div className="card" {...otherProps}>
       <div className="calendar">
-        <div className="calendar__year">
-          <h3>{format(activeDate, 'yyyy')}</h3>
-        </div>
         <div className="calendar__month">
           <span onClick={() => setActiveDate(subMonths(activeDate, 1))}>
             &#8249;
           </span>
-          <h4>{format(activeDate, 'LLLL')}</h4>
+          <h5>
+            {format(activeDate, 'yyyy')} {format(activeDate, 'LLLL')}
+          </h5>
           <span onClick={() => setActiveDate(addMonths(activeDate, 1))}>
             &#8250;
           </span>
         </div>
         <div className="calendar__days-of-week">
-          <span>Su</span>
-          <span>Mo</span>
-          <span>Tu</span>
-          <span>We</span>
-          <span>Th</span>
-          <span>Fr</span>
-          <span>Sa</span>
+          <span>sun</span>
+          <span>mon</span>
+          <span>tue</span>
+          <span>wed</span>
+          <span>thu</span>
+          <span>fri</span>
+          <span>sat</span>
         </div>
         <div className="calendar__dates">
           {getMonthDateElements(activeDate)}

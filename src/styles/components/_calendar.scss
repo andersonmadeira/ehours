@@ -18,14 +18,24 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-start;
 }
 
-.calendar__month h4 {
+.calendar__month h5 {
   margin: 0;
+  line-height: 1em;
+  font-family: Rubik;
+  font-size: 1.6rem;
 }
 
 .calendar__month span {
   cursor: pointer;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  font-size: 1.9rem;
+  line-height: 1em;
 }
 
 .calendar__days-of-week,
@@ -41,6 +51,8 @@
 .calendar__days-of-week span {
   font-size: 1.2rem;
   text-align: center;
+  color: #4c566a;
+  opacity: 0.7;
 }
 
 .calendar__dates button:first-child {
@@ -57,4 +69,5 @@
 .calendar__dates button time {
   font-size: 1rem;
   text-align: center;
+  color: #2e3440;
 }
