@@ -1,0 +1,31 @@
+.form-control {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-control label {
+  margin-bottom: 5px;
+}
+
+.form-control input {
+  width: 100px;
+}
+
+.form-control .has-error {
+  margin-top: 5px;
+  color: red;
+}
+
+input {
+  flex-grow: 1;
+  background: #f8f9fb;
+  color: #4c5569;
+  font-size: 1em;
+  border: 0;
+  font-family: 'Ubuntu', sans-serif;
+  padding-left: 0.5em;
+  :focus {
+    outline: none;
+  }
+}

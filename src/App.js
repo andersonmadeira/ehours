@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Calendar from './components/Calendar'
 import Modal from './components/Modal'
 import { format } from 'date-fns'
+import ScheduleForm from './components/ScheduleForm'
 
 const App = () => {
   const [isModalVisible, setIsModalVisible] = useState(false)
@@ -20,17 +21,21 @@ const App = () => {
         />
       </div>
       <Modal
-        title="Save my schedules"
+        title={`Save my schedules - ${
+          selectedDate ? format(selectedDate, 'yyyy/MM/dd') : ''
+        }`}
         visible={isModalVisible}
         onClose={() => {
-          console.log('Saved!')
           setIsModalVisible(false)
         }}
       >
-        <p style={{ margin: 0 }}>
-          Save schedules for{' '}
-          {selectedDate ? format(selectedDate, 'yyyy/MM/dd') : ''}
-        </p>
+        <ScheduleForm
+          date={selectedDate}
+          onSubmit={values => {
+            console.log('Form submitted:', values)
+            setIsModalVisible(false)
+          }}
+        />
       </Modal>
     </>
   )

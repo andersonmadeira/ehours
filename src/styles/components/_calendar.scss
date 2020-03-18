@@ -85,26 +85,26 @@
 
 .calendar__dates button.today,
 .calendar__dates button.today.selected {
-  background-color: #5e81ac;
+  background-color: $main-bg-color;
   border-radius: 50%;
   padding: 5px;
 }
 
 .calendar__dates button.today time {
-  color: #eceff4;
+  color: $main-bg-light;
 }
 
 .calendar__dates button.selected {
-  border-color: #5e81ac;
+  border-color: $main-bg-color;
   border-width: 1px;
   border-radius: 50%;
   border-style: solid;
 }
 
 .calendar__dates button.selected time {
-  color: #5e81ac;
+  color: $main-bg-color;
 }
 
 .calendar__dates button.today.selected time {
-  color: #eceff4;
+  color: $main-bg-light;
 }
