@@ -40,6 +40,9 @@
 
 .calendar__days-of-week,
 .calendar__dates {
+  justify-items: center;
+  align-items: center;
+  gap: 5px;
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
@@ -63,8 +66,9 @@
   outline: none;
   border: none;
   background: transparent;
-  padding: 10px;
   cursor: pointer;
+  width: 40px;
+  height: 40px;
 }
 
 .calendar__dates button time {
@@ -73,25 +77,34 @@
   color: #2e3440;
 }
 
-.calendar__dates button.future time {
+.calendar__dates button.future {
   cursor: not-allowed;
   color: #4c566a;
   opacity: 0.7;
 }
 
-.calendar__dates button.today time,
-.calendar__dates button.today.selected time {
-  color: #eceff4;
+.calendar__dates button.today,
+.calendar__dates button.today.selected {
   background-color: #5e81ac;
   border-radius: 50%;
   padding: 5px;
 }
 
-.calendar__dates button.selected time {
-  color: #5e81ac;
+.calendar__dates button.today time {
+  color: #eceff4;
+}
+
+.calendar__dates button.selected {
   border-color: #5e81ac;
   border-width: 1px;
   border-radius: 50%;
   border-style: solid;
-  padding: 5px;
+}
+
+.calendar__dates button.selected time {
+  color: #5e81ac;
+}
+
+.calendar__dates button.today.selected time {
+  color: #eceff4;
 }

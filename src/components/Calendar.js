@@ -47,7 +47,7 @@ function getMonthDateElements(date, onSelectDate) {
         style={i === 0 ? startStyle : null}
         onClick={!isFuture ? () => onSelectDate(new Date(dateString)) : null}
       >
-        <time dateTime={`${dateString}`}>{`${i + 1}`.padStart(2, '0')}</time>
+        <time dateTime={`${dateString}`}>{i + 1}</time>
       </button>
     )
   })
