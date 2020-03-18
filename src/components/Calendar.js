@@ -8,7 +8,6 @@ import {
   addMonths,
   subMonths,
   isAfter,
-  getDate,
   isToday,
   isEqual,
 } from 'date-fns'
@@ -17,7 +16,6 @@ import classNames from 'classnames'
 function getMonthDateElements(date, onSelectDate) {
   const activeMonth = getMonth(date)
   const activeYear = getYear(date)
-  const activeDay = getDate(date)
   const startMonth = getDay(new Date(activeYear, activeMonth, 1))
   const startStyle = { gridColumn: startMonth + 1 }
 
