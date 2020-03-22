@@ -108,3 +108,15 @@
 .calendar__dates button.today.selected time {
   color: $main-bg-light;
 }
+
+.worked-time--equal {
+  color: inherit;
+}
+
+.worked-time--more {
+  color: rgb(49, 175, 10);
+}
+
+.worked-time--less {
+  color: rgb(255, 0, 0);
+}

@@ -13,7 +13,6 @@ const App = () => {
       <div className="app-container">
         <h1>ehours</h1>
         <Calendar
-          style={{ marginRight: 20 }}
           onPickDate={date => {
             setSelectedDate(date)
             setIsModalVisible(true)

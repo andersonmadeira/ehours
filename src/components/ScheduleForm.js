@@ -1,6 +1,6 @@
 import React from 'react'
 import { useFormik } from 'formik'
-import { setHours, setMinutes, isBefore } from 'date-fns'
+import { setHours, setMinutes, isBefore, differenceInMinutes } from 'date-fns'
 
 function addTime(date, time) {
   return setMinutes(setHours(date, +time.split(':')[0]), +time.split(':')[1])
@@ -42,6 +42,43 @@ function formValidate(date, values) {
   return errors
 }
 
+function calculateWorkedTime(date, values) {
+  const startDateDay = addTime(date, values.startTimeDay)
+  const startDateLunch = addTime(date, values.startTimeLunch)
+  const endDateLunch = addTime(date, values.endTimeLunch)
+  const endDateDay = addTime(date, values.endTimeDay)
+
+  const workedTimeInMinutes =
+    differenceInMinutes(startDateLunch, startDateDay) +
+    differenceInMinutes(endDateDay, endDateLunch)
+
+  return {
+    totalMinutes: workedTimeInMinutes,
+    hours: Math.floor(workedTimeInMinutes / 60),
+    minutes: workedTimeInMinutes % 60,
+  }
+}
+
+function getFormattedWorkedTime(workedTime) {
+  console.log('Worked Time:', workedTime)
+
+  const workedTimeClass =
+    workedTime.totalMinutes === 480
+      ? 'worked-time--equal'
+      : workedTime.totalMinutes > 480
+      ? 'worked-time--more'
+      : 'worked-time--less'
+
+  return workedTime.totalMinutes ? (
+    <span className={workedTimeClass}>
+      {`Worked Hours: ` +
+        `${workedTime.hours}`.padStart(2, '0') +
+        `:` +
+        `${workedTime.minutes}`.padStart(2, '0')}
+    </span>
+  ) : null
+}
+
 const ScheduleForm = ({ date, onSubmit }) => {
   const form = useFormik({
     initialValues: {
@@ -57,6 +94,10 @@ const ScheduleForm = ({ date, onSubmit }) => {
       }
     },
   })
+
+  const workedTimeFormatted = form.isValid
+    ? getFormattedWorkedTime(calculateWorkedTime(date, form.values))
+    : ''
 
   return (
     <form className="schedule-form" onSubmit={form.handleSubmit}>
@@ -104,6 +145,7 @@ const ScheduleForm = ({ date, onSubmit }) => {
           <span className="has-error">{form.errors.endTimeDay}</span>
         ) : null}
       </div>
+      <p>{form.isValid ? workedTimeFormatted : ''}</p>
       <button className="button" type="submit">
         Save
       </button>
