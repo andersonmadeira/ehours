@@ -1,6 +1,13 @@
 import React from 'react'
 import { useFormik } from 'formik'
-import { setHours, setMinutes, isBefore, differenceInMinutes } from 'date-fns'
+import {
+  setHours,
+  setMinutes,
+  isBefore,
+  differenceInMinutes,
+  format,
+} from 'date-fns'
+import api from '../services/api'
 
 function addTime(date, time) {
   return setMinutes(setHours(date, +time.split(':')[0]), +time.split(':')[1])
@@ -89,9 +96,27 @@ const ScheduleForm = ({ date, onSubmit }) => {
     },
     validate: values => formValidate(date, values),
     onSubmit: values => {
-      if (onSubmit) {
-        onSubmit(values)
-      }
+      const startDay = addTime(date, values.startTimeDay)
+      const startLunch = addTime(date, values.startTimeLunch)
+      const endLunch = addTime(date, values.endTimeLunch)
+      const endDay = addTime(date, values.endTimeDay)
+
+      const dateFormatted = format(date, 'yyyy-MM-dd')
+
+      api
+        .post('/schedules', {
+          date: dateFormatted,
+          startDay,
+          startLunch,
+          endLunch,
+          endDay,
+        })
+        .then(res => {
+          console.log('Response:', res)
+        })
+        .catch(res => {
+          console.log('Error response:', res)
+        })
     },
   })
 
