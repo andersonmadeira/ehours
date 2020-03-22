@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import App from './App'
-import { isAuthenticated, logout } from './services/auth'
+import { isAuthenticated } from './services/auth'
 import Login from './components/Login'
 
 const Routes = () => {
@@ -10,9 +10,6 @@ const Routes = () => {
       <Switch>
         <Route path="/login">
           <Login />
-        </Route>
-        <Route path="/logout">
-          <p>Logout</p>
         </Route>
         <PrivateRoute path="/">
           <App />

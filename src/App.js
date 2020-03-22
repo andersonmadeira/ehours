@@ -58,8 +58,7 @@ const App = () => {
       >
         <ScheduleForm
           date={selectedDate}
-          onSubmit={values => {
-            console.log('Form submitted:', values)
+          onSubmit={schedule => {
             setIsModalVisible(false)
           }}
         />

@@ -67,8 +67,6 @@ function calculateWorkedTime(date, values) {
 }
 
 function getFormattedWorkedTime(workedTime) {
-  console.log('Worked Time:', workedTime)
-
   const workedTimeClass =
     workedTime.totalMinutes === 480
       ? 'worked-time--equal'
@@ -112,6 +110,9 @@ const ScheduleForm = ({ date, onSubmit }) => {
           endDay,
         })
         .then(res => {
+          if (onSubmit) {
+            onSubmit(res.data)
+          }
           console.log('Response:', res)
         })
         .catch(res => {
