@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormik } from 'formik'
 import {
   setHours,
@@ -6,8 +6,10 @@ import {
   isBefore,
   differenceInMinutes,
   format,
+  parseISO,
 } from 'date-fns'
 import api from '../services/api'
+import { getHours, getMinutes } from 'date-fns/esm'
 
 function addTime(date, time) {
   return setMinutes(setHours(date, +time.split(':')[0]), +time.split(':')[1])
@@ -84,7 +86,9 @@ function getFormattedWorkedTime(workedTime) {
   ) : null
 }
 
-const ScheduleForm = ({ date, onSubmit }) => {
+const ScheduleForm = ({ date, onSubmit, scheduleId }) => {
+  console.log(scheduleId)
+
   const form = useFormik({
     initialValues: {
       startTimeDay: '',
@@ -118,6 +122,35 @@ const ScheduleForm = ({ date, onSubmit }) => {
         })
     },
   })
+
+  useEffect(() => {
+    if (scheduleId) {
+      api.get(`/schedules/${scheduleId}`).then(res => {
+        console.log(res)
+        const startDayDate = parseISO(res.data.startDay),
+          startLunchDate = parseISO(res.data.startLunch),
+          endLunchDate = parseISO(res.data.endLunch),
+          endDayDate = parseISO(res.data.endDay)
+
+        console.log(
+          'startTimeDay',
+          getHours(startDayDate) + ':' + getMinutes(startDayDate),
+        )
+        console.log(
+          'startTimeLunch',
+          getHours(startLunchDate) + ':' + getMinutes(startLunchDate),
+        )
+        console.log(
+          'endTimeLunch',
+          getHours(endLunchDate) + ':' + getMinutes(endLunchDate),
+        )
+        console.log(
+          'endTimeDay',
+          getHours(endDayDate) + ':' + getMinutes(endDayDate),
+        )
+      })
+    }
+  }, [form, scheduleId])
 
   const workedTimeFormatted = form.isValid
     ? getFormattedWorkedTime(calculateWorkedTime(date, form.values))

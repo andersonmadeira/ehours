@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   getDaysInMonth,
   getMonth,
@@ -9,15 +9,8 @@ import {
   subMonths,
   isAfter,
   isToday,
-  startOfMonth,
-  endOfMonth,
-  getDate,
-  toDate,
-  parse,
 } from 'date-fns'
 import classNames from 'classnames'
-import api from '../services/api'
-import { parseISO } from 'date-fns/esm'
 
 function getMonthDateElements(date, monthSchedules, onSelect) {
   const activeMonth = getMonth(date)
@@ -59,52 +52,30 @@ function getMonthDateElements(date, monthSchedules, onSelect) {
   })
 }
 
-const Calendar = ({ date = new Date(), onSelect, onChange, ...otherProps }) => {
-  const [pivotDate, setPivotDate] = useState(date)
-  const [monthSchedules, setMonthSchedules] = useState({})
-
-  useEffect(() => {
-    const min = format(startOfMonth(pivotDate), 'yyyy-MM-dd'),
-      max = format(endOfMonth(pivotDate), 'yyyy-MM-dd'),
-      params = `?min=${min}&max=${max}`
-
-    api.get(`/schedules/${params}`).then(res => {
-      console.log(res.data)
-      setMonthSchedules(
-        res.data.reduce((acc, current) => {
-          console.log(current.date)
-          console.log(parseISO(current.date))
-          console.log(parseISO(current.date) - 1)
-          return {
-            ...acc,
-            [getDate(parseISO(current.date)) - 1]: current,
-          }
-        }, {}),
-      )
-    })
-  }, [pivotDate])
-
+const Calendar = ({
+  date = new Date(),
+  monthSchedules,
+  onSelect,
+  onChange,
+  ...otherProps
+}) => {
   return (
     <div className="card" {...otherProps}>
       <div className="calendar">
         <div className="calendar__month">
           <span
             onClick={() => {
-              const newDate = subMonths(pivotDate, 1)
-              if (onChange) onChange(newDate)
-              setPivotDate(newDate)
+              if (onChange) onChange(subMonths(date, 1))
             }}
           >
             &#8249;
           </span>
           <h5>
-            {format(pivotDate, 'yyyy')} {format(pivotDate, 'LLLL')}
+            {format(date, 'yyyy')} {format(date, 'LLLL')}
           </h5>
           <span
             onClick={() => {
-              const newDate = addMonths(pivotDate, 1)
-              if (onChange) onChange(newDate)
-              setPivotDate(addMonths(pivotDate, 1))
+              if (onChange) onChange(addMonths(date, 1))
             }}
           >
             &#8250;
@@ -120,7 +91,7 @@ const Calendar = ({ date = new Date(), onSelect, onChange, ...otherProps }) => {
           <span>sat</span>
         </div>
         <div className="calendar__dates">
-          {getMonthDateElements(pivotDate, monthSchedules, onSelect)}
+          {getMonthDateElements(date, monthSchedules, onSelect)}
         </div>
       </div>
     </div>
