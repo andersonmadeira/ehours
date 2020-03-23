@@ -103,6 +103,18 @@
   border-style: solid;
 }
 
+.calendar__dates button.schedule {
+  border-bottom: 5px solid $main-bg-color;
+}
+
+.calendar__dates button.schedule--up {
+  border-bottom-color: rgb(49, 175, 10);
+}
+
+.calendar__dates button.schedule--down {
+  border-bottom-color: rgb(255, 0, 0);
+}
+
 .calendar__dates button.selected time {
   // deprecated .selected class
   color: $main-bg-color;

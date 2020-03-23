@@ -12,7 +12,6 @@ const App = () => {
   const [authenticated, setAuthenticated] = useState(isAuthenticated())
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
-  const [pivotDate, setPivotDate] = useState(new Date())
 
   useEffect(() => {
     if (authenticated) {
@@ -21,16 +20,6 @@ const App = () => {
       })
     }
   }, [authenticated])
-
-  useEffect(() => {
-    const min = format(startOfMonth(pivotDate), 'yyyy-MM-dd'),
-      max = format(endOfMonth(pivotDate), 'yyyy-MM-dd'),
-      params = `?min=${min}&max=${max}`
-
-    api.get(`/schedules/${params}`).then(res => {
-      console.log(res.data)
-    })
-  }, [pivotDate])
 
   return authenticated ? (
     <>
@@ -55,10 +44,6 @@ const App = () => {
           onSelect={date => {
             setSelectedDate(date)
             setIsModalVisible(true)
-          }}
-          onChange={date => {
-            console.log('date changed to:', date)
-            setPivotDate(date)
           }}
         />
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   getDaysInMonth,
   getMonth,
@@ -9,10 +9,17 @@ import {
   subMonths,
   isAfter,
   isToday,
+  startOfMonth,
+  endOfMonth,
+  getDate,
+  toDate,
+  parse,
 } from 'date-fns'
 import classNames from 'classnames'
+import api from '../services/api'
+import { parseISO } from 'date-fns/esm'
 
-function getMonthDateElements(date, onSelectDate) {
+function getMonthDateElements(date, monthSchedules, onSelect) {
   const activeMonth = getMonth(date)
   const activeYear = getYear(date)
   const startMonth = getDay(new Date(activeYear, activeMonth, 1))
@@ -29,6 +36,13 @@ function getMonthDateElements(date, onSelectDate) {
     const btnClasses = classNames({
       future: isFuture,
       today: isDateToday,
+      schedule: monthSchedules[i] !== undefined,
+      'schedule--up':
+        monthSchedules[i] !== undefined &&
+        monthSchedules[i].workedMinutes > 480,
+      'schedule--down':
+        monthSchedules[i] !== undefined &&
+        monthSchedules[i].workedMinutes < 480,
     })
     const dateString = `${activeYear}-${activeMonth + 1}-${i + 1}`
 
@@ -37,7 +51,7 @@ function getMonthDateElements(date, onSelectDate) {
         key={i}
         className={btnClasses}
         style={i === 0 ? startStyle : null}
-        onClick={!isFuture ? () => onSelectDate(new Date(dateString)) : null}
+        onClick={!isFuture ? () => onSelect(new Date(dateString)) : null}
       >
         <time dateTime={`${dateString}`}>{i + 1}</time>
       </button>
@@ -46,7 +60,29 @@ function getMonthDateElements(date, onSelectDate) {
 }
 
 const Calendar = ({ date = new Date(), onSelect, onChange, ...otherProps }) => {
-  const [activeDate, setActiveDate] = useState(date)
+  const [pivotDate, setPivotDate] = useState(date)
+  const [monthSchedules, setMonthSchedules] = useState({})
+
+  useEffect(() => {
+    const min = format(startOfMonth(pivotDate), 'yyyy-MM-dd'),
+      max = format(endOfMonth(pivotDate), 'yyyy-MM-dd'),
+      params = `?min=${min}&max=${max}`
+
+    api.get(`/schedules/${params}`).then(res => {
+      console.log(res.data)
+      setMonthSchedules(
+        res.data.reduce((acc, current) => {
+          console.log(current.date)
+          console.log(parseISO(current.date))
+          console.log(parseISO(current.date) - 1)
+          return {
+            ...acc,
+            [getDate(parseISO(current.date)) - 1]: current,
+          }
+        }, {}),
+      )
+    })
+  }, [pivotDate])
 
   return (
     <div className="card" {...otherProps}>
@@ -54,21 +90,21 @@ const Calendar = ({ date = new Date(), onSelect, onChange, ...otherProps }) => {
         <div className="calendar__month">
           <span
             onClick={() => {
-              const newDate = subMonths(activeDate, 1)
-              onChange(newDate)
-              setActiveDate(newDate)
+              const newDate = subMonths(pivotDate, 1)
+              if (onChange) onChange(newDate)
+              setPivotDate(newDate)
             }}
           >
             &#8249;
           </span>
           <h5>
-            {format(activeDate, 'yyyy')} {format(activeDate, 'LLLL')}
+            {format(pivotDate, 'yyyy')} {format(pivotDate, 'LLLL')}
           </h5>
           <span
             onClick={() => {
-              const newDate = addMonths(activeDate, 1)
-              onChange(newDate)
-              setActiveDate(addMonths(activeDate, 1))
+              const newDate = addMonths(pivotDate, 1)
+              if (onChange) onChange(newDate)
+              setPivotDate(addMonths(pivotDate, 1))
             }}
           >
             &#8250;
@@ -84,7 +120,7 @@ const Calendar = ({ date = new Date(), onSelect, onChange, ...otherProps }) => {
           <span>sat</span>
         </div>
         <div className="calendar__dates">
-          {getMonthDateElements(activeDate, onSelect)}
+          {getMonthDateElements(pivotDate, monthSchedules, onSelect)}
         </div>
       </div>
     </div>

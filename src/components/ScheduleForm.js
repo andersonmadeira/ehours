@@ -99,15 +99,13 @@ const ScheduleForm = ({ date, onSubmit }) => {
       const endLunch = addTime(date, values.endTimeLunch)
       const endDay = addTime(date, values.endTimeDay)
 
-      const dateFormatted = format(date, 'yyyy-MM-dd')
-
       api
         .post('/schedules', {
-          date: dateFormatted,
-          startDay,
-          startLunch,
-          endLunch,
-          endDay,
+          date: format(date, 'yyyy-MM-dd'),
+          startDay: format(startDay, 'yyyy-MM-dd HH:mm'),
+          startLunch: format(startLunch, 'yyyy-MM-dd HH:mm'),
+          endLunch: format(endLunch, 'yyyy-MM-dd HH:mm'),
+          endDay: format(endDay, 'yyyy-MM-dd HH:mm'),
         })
         .then(res => {
           if (onSubmit) {
