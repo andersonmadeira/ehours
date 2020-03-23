@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Calendar from './components/Calendar'
 import Modal from './components/Modal'
-import { format } from 'date-fns'
+import { format, startOfMonth, endOfMonth } from 'date-fns'
 import ScheduleForm from './components/ScheduleForm'
 import { logout, isAuthenticated } from './services/auth'
 import { Redirect } from 'react-router-dom'
@@ -12,6 +12,7 @@ const App = () => {
   const [authenticated, setAuthenticated] = useState(isAuthenticated())
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [selectedDate, setSelectedDate] = useState(null)
+  const [pivotDate, setPivotDate] = useState(new Date())
 
   useEffect(() => {
     if (authenticated) {
@@ -20,6 +21,16 @@ const App = () => {
       })
     }
   }, [authenticated])
+
+  useEffect(() => {
+    const min = format(startOfMonth(pivotDate), 'yyyy-MM-dd'),
+      max = format(endOfMonth(pivotDate), 'yyyy-MM-dd'),
+      params = `?min=${min}&max=${max}`
+
+    api.get(`/schedules/${params}`).then(res => {
+      console.log(res.data)
+    })
+  }, [pivotDate])
 
   return authenticated ? (
     <>
@@ -41,9 +52,13 @@ const App = () => {
           </div>
         </header>
         <Calendar
-          onPickDate={date => {
+          onSelect={date => {
             setSelectedDate(date)
             setIsModalVisible(true)
+          }}
+          onChange={date => {
+            console.log('date changed to:', date)
+            setPivotDate(date)
           }}
         />
       </div>

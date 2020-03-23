@@ -9,7 +9,6 @@ import {
   subMonths,
   isAfter,
   isToday,
-  isEqual,
 } from 'date-fns'
 import classNames from 'classnames'
 
@@ -26,15 +25,10 @@ function getMonthDateElements(date, onSelectDate) {
     )
 
     const isDateToday = isToday(new Date(activeYear, activeMonth, i + 1))
-    const isDateSelected = isEqual(
-      date,
-      new Date(activeYear, activeMonth, i + 1),
-    )
 
     const btnClasses = classNames({
       future: isFuture,
       today: isDateToday,
-      selected: isDateSelected,
     })
     const dateString = `${activeYear}-${activeMonth + 1}-${i + 1}`
 
@@ -51,20 +45,32 @@ function getMonthDateElements(date, onSelectDate) {
   })
 }
 
-const Calendar = ({ date = new Date(), onPickDate, ...otherProps }) => {
+const Calendar = ({ date = new Date(), onSelect, onChange, ...otherProps }) => {
   const [activeDate, setActiveDate] = useState(date)
 
   return (
     <div className="card" {...otherProps}>
       <div className="calendar">
         <div className="calendar__month">
-          <span onClick={() => setActiveDate(subMonths(activeDate, 1))}>
+          <span
+            onClick={() => {
+              const newDate = subMonths(activeDate, 1)
+              onChange(newDate)
+              setActiveDate(newDate)
+            }}
+          >
             &#8249;
           </span>
           <h5>
             {format(activeDate, 'yyyy')} {format(activeDate, 'LLLL')}
           </h5>
-          <span onClick={() => setActiveDate(addMonths(activeDate, 1))}>
+          <span
+            onClick={() => {
+              const newDate = addMonths(activeDate, 1)
+              onChange(newDate)
+              setActiveDate(addMonths(activeDate, 1))
+            }}
+          >
             &#8250;
           </span>
         </div>
@@ -78,10 +84,7 @@ const Calendar = ({ date = new Date(), onPickDate, ...otherProps }) => {
           <span>sat</span>
         </div>
         <div className="calendar__dates">
-          {getMonthDateElements(activeDate, date => {
-            setActiveDate(date)
-            if (onPickDate) onPickDate(date)
-          })}
+          {getMonthDateElements(activeDate, onSelect)}
         </div>
       </div>
     </div>
